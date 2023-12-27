@@ -2272,16 +2272,18 @@ class ProteinRunner():
                     if line.startswith('#'):
                         continue
                     line = line.strip().split()
-                    target_name = line[0]
-                    query_name = line[3]
-                    hmm_score = float(line[7])
-                    hmm_from = int(line[15])
-                    hmm_to = int(line[16])
-                    assert hmm_to >= hmm_from
-                    if hmm_score < score_cutoff_dict[query_name]:
-                        # failed to pass the score cutoff
-                        continue
-                    coords_dict[target_name].append((hmm_from, hmm_to))
+                    # observed one odd case where the column number in the *out file was not 23
+                    if len(line) == 23:
+                        target_name = line[0]
+                        query_name = line[3]
+                        hmm_score = float(line[7])
+                        hmm_from = int(line[15])
+                        hmm_to = int(line[16])
+                        assert hmm_to >= hmm_from
+                        if hmm_score < score_cutoff_dict[query_name]:
+                            # failed to pass the score cutoff
+                            continue
+                        coords_dict[target_name].append((hmm_from, hmm_to))
                 for tname in coords_dict.keys():
                     coords = coords_dict[tname]
                     interval = []
